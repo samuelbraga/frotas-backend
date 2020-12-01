@@ -10,6 +10,7 @@ WORKDIR /app/Frota.API
 RUN dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine
+ENV PATH_BASE=/api/frotas
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 

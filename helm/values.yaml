@@ -15,14 +15,14 @@ deployment:
 
 healthCheckPath:
   readinessProbe:
-    path: /health/ready
+    path: /api/frotas/health/ready
     port: 8080
     initialDelaySeconds: 15
     periodSeconds: 30
     timeoutSeconds: 1
     failureThreshold: 3
   livenessProbe:
-    path: /health/live
+    path: /api/frotas/health/live
     port: 8080
     initialDelaySeconds: 100
     periodSeconds: 15
@@ -47,3 +47,6 @@ hpa:
 service:
   externalPort: 80
   protcol: TCP
+
+gateway:
+  prefix: /api/frotas
