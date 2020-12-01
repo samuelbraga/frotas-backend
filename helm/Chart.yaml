@@ -1,3 +1,4 @@
+apiVersion: v2
 name: Chart dotnet-core
 description: Helm chart para publicação de uma aplicação dotnet core.
 type: application

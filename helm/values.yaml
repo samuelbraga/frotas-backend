@@ -3,49 +3,47 @@ applicationVersion: v1
 namespace: frotas
 
 deployment:
-    replicaCount: 1
-    image:
-        name: frotas-backend
-        tag: 123
-        repository: repository
-        imagePullSecret: secret
-        pullPolicy: IfNotPresent
-    containerPort: 80
-    protcol: http
+  image:
+    repository: docker.io
+    name: samuelfantini/frota-backend
+    tag: latest
+    imagePullSecret: hubsecret
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  containerPort: 8080
+  protcol: http
 
 healthCheckPath:
-    readinessProbe:
-        path: /health/ready
-        port: 80
-        initialDelaySeconds: 15
-        periodSeconds: 30
-        timeoutSeconds: 1
-        failureThreshold: 3
-    livenessProbe:
-        path: /health/live
-        port: 80
-        initialDelaySeconds: 100
-        periodSeconds: 15
-        timeoutSeconds: 1
-        failureThreshold: 3
+  readinessProbe:
+    path: /health/ready
+    port: 8080
+    initialDelaySeconds: 15
+    periodSeconds: 30
+    timeoutSeconds: 1
+    failureThreshold: 3
+  livenessProbe:
+    path: /health/live
+    port: 8080
+    initialDelaySeconds: 100
+    periodSeconds: 15
+    timeoutSeconds: 1
+    failureThreshold: 3
 
 resources:
-    requests:
-        cpu: 10m
-        memory: 64Mi
-    limits:
-        cpu: 25m
-        memory: 128Mi
+  requests:
+    cpu: 10m
+    memory: 64Mi
+  limits:
+    cpu: 25m
+    memory: 128Mi
 
 hpa:
-    minReplicas: 1
-    maxReplicas: 3
-    metricName: memory
-    averageUtilization: 70
-
-ingress:
-    host: frotas.example.com
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  metricName: memory
+  averageUtilization: 70
 
 service:
-    externalPort: 80
-    protcol: TCP
+  externalPort: 80
+  protcol: TCP

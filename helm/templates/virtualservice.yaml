@@ -4,12 +4,15 @@ metadata:
   name: {{ .Values.applicationName }}
 spec:
   hosts:
-  - {{ .Values.ingress.host }}
+  - "*"
   gateways:
   - {{ .Values.applicationName }}
   http:
+  - match:
+    - uri:
+        prefix: /frota
     route:
     - destination:
+        host: {{ .Values.applicationName }}
         port:
           number: 80
-        host: {{ .Values.applicationName }}
