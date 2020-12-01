@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,8 @@ namespace Frota.API
                             Version = "v1"
                         });
                 });
+
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,6 +65,17 @@ namespace Frota.API
                 .UseEndpoints(endpoints =>
                 {
                     endpoints.MapControllers();
+
+                    endpoints
+                        .MapHealthChecks("/health/ready",
+                        new HealthCheckOptions()
+                        {
+                            Predicate = (check) => check.Tags.Contains("ready")
+                        });
+
+                    endpoints
+                        .MapHealthChecks("/health/live",
+                        new HealthCheckOptions() { Predicate = (_) => false });
                 });
         }
     }

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: {{ .Values.applicationName }}
+    namespace: {{ .Values.namespace }}
+    labels:
+        app: {{ .Values.applicationName }}
+        version: {{ .Values.applicationVersion }}
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: {{ .Values.applicationName }}
+            version: {{ .Values.applicationVersion }}
+    template:
+        metadata:
+            name: {{ .Values.applicationName }}
+            labels:
+                app: {{ .Values.applicationName }}
+                version: {{ .Values.applicationVersion }}
+        spec:
+            imagePullSecrets:
+            - name: {{ .Values.deployment.image.imagePullSecret }}
+            containers:
+            - name: {{ .Values.applicationName }}
+                image: "{{ .Values.deployment.image.repository }}/{{ .Values.deployment.image.name }}:{{ .Values.deployment.image.tag }}"
+                imagePullPolicy: Always
+                ports:
+                - containerPort: {{ .Values.deployment.containerPort }}
+                name: {{ .Values.deployment.protcol }}
+                readinessProbe:
+                    httpGet:
+                        path: {{ .Values.healthCheckPath.readinessProbe.path }}
+                        port: {{ .Values.healthCheckPath.readinessProbe.port }}
+                    initialDelaySeconds: {{ .Values.healthCheckPath.readinessProbe.initialDelaySeconds }}
+                    periodSeconds: {{ .Values.healthCheckPath.readinessProbe.periodSeconds }}
+                    timeoutSeconds: {{ .Values.healthCheckPath.readinessProbe.timeoutSeconds }}
+                    failureThreshold: {{ .Values.healthCheckPath.readinessProbe.failureThreshold }}
+                livenessProbe:
+                    httpGet:
+                        path: {{ .Values.healthCheckPath.livenessProbe.path }}
+                        port: {{ .Values.healthCheckPath.livenessProbe.port }}
+                    initialDelaySeconds: {{ .Values.healthCheckPath.livenessProbe.initialDelaySeconds }}
+                    periodSeconds: {{ .Values.healthCheckPath.livenessProbe.periodSeconds }}
+                    timeoutSeconds: {{ .Values.healthCheckPath.livenessProbe.timeoutSeconds }}
+                    failureThreshold: {{ .Values.healthCheckPath.livenessProbe.failureThreshold }}
+                env:
+                {{- range .Values.env }}
+                - name: {{ .name }}
+                    value: {{ .value }}
+                {{- end }}  
+                resources:
+                {{- toYaml .Values.resources | nindent 12 }}

@@ -1,0 +1,51 @@
+applicationName: frota-backend
+applicationVersion: v1
+namespace: frotas
+
+deployment:
+    replicaCount: 1
+    image:
+        name: frotas-backend
+        tag: 123
+        repository: repository
+        imagePullSecret: secret
+        pullPolicy: IfNotPresent
+    containerPort: 80
+    protcol: http
+
+healthCheckPath:
+    readinessProbe:
+        path: /health/ready
+        port: 80
+        initialDelaySeconds: 15
+        periodSeconds: 30
+        timeoutSeconds: 1
+        failureThreshold: 3
+    livenessProbe:
+        path: /health/live
+        port: 80
+        initialDelaySeconds: 100
+        periodSeconds: 15
+        timeoutSeconds: 1
+        failureThreshold: 3
+
+resources:
+    requests:
+        cpu: 10m
+        memory: 64Mi
+    limits:
+        cpu: 25m
+        memory: 128Mi
+
+hpa:
+    minReplicas: 1
+    maxReplicas: 3
+    metricName: memory
+    averageUtilization: 70
+
+ingress:
+    host: frotas.example.com
+
+service:
+    externalPort: 80
+    protcol: TCP
