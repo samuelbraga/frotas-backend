@@ -1,0 +1,5 @@
+apiVersion: v2
+name: Chart dotnet-core canary
+description: Helm chart para publicação de uma aplicação dotnet core.
+type: application
+version: 1.0.0

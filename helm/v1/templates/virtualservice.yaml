@@ -16,3 +16,11 @@ spec:
         host: {{ .Values.applicationName }}
         port:
           number: 80
+        subset: {{ .Values.applicationVersion }}
+      weight: {{ sub  100 .Values.gateway.canaryPorcentege }} 
+    - destination:
+        host: {{ .Values.applicationName }}
+        port:
+          number: 80
+        subset: canary
+      weight: {{ .Values.gateway.canaryPorcentege }}
